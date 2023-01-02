@@ -1,8 +1,12 @@
 1. DL And Install SDL2
 
 Extracted the x86_64 SDL stuff to C:\Users\elbaz\AppData\Local\JetBrains\Toolbox\apps\CLion\ch-0\222.4345.21\bin\mingw\x86_64-w64-mingw32
+C:/Program Files/JetBrains/CLion 2022.3.1/bin/mingw/x86_64-w64-mingw32/lib/cmake/SDL2
+
 which is the bundled mingw location, so may change on version
 
 2. Added Glad lib to project
 
 3. Added all the stuff in the CMake file to find SDL2 etc
+
+4. when built, put the SDL2.dll into cmake build folder next to executable

@@ -1,0 +1,6 @@
+#ifndef SDL2ENGINE_TYPES_H
+#define SDL2ENGINE_TYPES_H
+
+
+
+#endif //SDL2ENGINE_TYPES_H

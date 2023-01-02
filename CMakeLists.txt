@@ -4,13 +4,13 @@ project(sdl2engine C)
 set(CMAKE_C_STANDARD 99)
 
 #required to get the sdl2 cmake file
-set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "C:/Users/elbaz/AppData/Local/JetBrains/Toolbox/apps/CLion/ch-0/222.4345.21/bin/mingw/x86_64-w64-mingw32/lib/cmake/SDL2")
+set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} "C:/Program Files/JetBrains/CLion 2022.3.1/bin/mingw/x86_64-w64-mingw32/lib/cmake/SDL2")
 
 find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIR})
 
 #define all source files
-set(SOURCE_FILES main.c lib/glad/src/glad.c)
+set(SOURCE_FILES main.c lib/glad/src/glad.c lib/engine/sdl2engine_types.h lib/engine/sdl2engine_utils.h lib/eOOPc.h lib/engine/global/sdl2engine_global_class.c lib/engine/global/sdl2engine_global_class.h lib/engine/render/sdl2engine_render_pub.h lib/engine/linmath.h lib/engine/render/sdl2engine_render_class.c lib/engine/render/sdl2engine_render_class.h lib/engine/global/sdl2engine_global_pub.h)
 
 #set include dir's so includes work in IDE
 include_directories(lib/glad/include)

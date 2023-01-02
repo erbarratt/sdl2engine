@@ -17,7 +17,7 @@
 
 		//public methods
 			void (*init)(void * eOBJ, int widthHere, int heightHere);
-			void (*begin)(void * eOBJ);
+			void (*begin)();
 			void (*end)(void * eOBJ);
 			void (*quad)(void * eOBJ, vec2 pos, vec2 size, vec4 color);
 

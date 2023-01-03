@@ -8,14 +8,20 @@
 */
 	struct sdl2engine_global_t {
 
-		//public properties
-			struct sdl2engine_render_t* render;
+		struct sdl2engine_render_t* render;
 
-		//public methods
-			void (*createWindow)(void * eOBJ, float widthHere, float heightHere);
+		/**
+		* \see sdl2engine_global_t_createWindow
+		*/
+			void (*createWindow)(void * eOBJ, int widthHere, int heightHere);
 
 	};
 
+/**
+* Instantiate global Object
+* @param void* eOBJ self
+* @return void
+*/
 	void sdl2engine_global_t_instantiate(void * eOBJ);
 
 #endif //SDL2ENGINE_SDL2ENGINE_GLOBAL_PUB_H

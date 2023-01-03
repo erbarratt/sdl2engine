@@ -21,41 +21,14 @@
 	#define DIR_SHIFT
 #endif
 
-
-
-////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////
 //VMT
-
-/**
-* Instantiate a Person class vmt
-* @param void* eOBJ Self (Class vmt)
-* @return void
-*/
-	void sdl2engine_render_t_vmt_instantiate(void * eOBJ)
-	{
-		//cast eOBJ back into class vmt type pointer
-			eSELF(sdl2engine_render_t_vmt);
-
-		//private props
-			self->state;
-
-		//define private methods
-			self->initWindow = &sdl2engine_render_t_initWindow;
-			self->initQuad = &sdl2engine_render_t_initQuad;
-			self->initColorTexture = &sdl2engine_render_t_initColorTexture;
-			self->initShaders = &sdl2engine_render_t_initShaders;
-			self->shaderCreate = &sdl2engine_render_t_shaderCreate;
-
-	}
 
 /**
 * Initialise a window
 * @param void* eOBJ Self (class)
-* @return SDL_Window
+* @return void
 */
-	SDL_Window * sdl2engine_render_t_initWindow(void * eOBJ)
+	void sdl2engine_render_t_initWindow(void * eOBJ)
 	{
 		//cast eOBJ back into class (NOT vmt!) type pointer
 			eSELF(SELF_TYPE);
@@ -64,7 +37,7 @@
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
 
-		if(SDL_Init(SDL_INIT_VIDEO) < 0){
+		if(SDL_InitSubSystem(SDL_INIT_VIDEO) < 0){
 			ERROR_EXIT(cRED "Could not init SDL: %s\n" cRESET, SDL_GetError());
 		}
 
@@ -77,22 +50,22 @@
 			SDL_WINDOW_OPENGL
 		);
 
-		if(!window){
+		if(window == NULL){
 			ERROR_EXIT(cRED "Could not init SDL window: %s\n" cRESET, SDL_GetError());
 		}
 
 		SDL_GL_CreateContext(window);
 		if(!gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress)){
-			eDEBUG("Could not load GL: %s\n", SDL_GetError());
-			exit(1);
+			ERROR_EXIT("Could not load GL: %s\n", SDL_GetError());
 		}
 
+		//due to buffering, will output once program is closed
 		puts("OpenGL Loaded");
 		printf("Vendor: %s\n", glGetString(GL_VENDOR));
 		printf("Renderer: %s\n", glGetString(GL_RENDERER));
 		printf("Version: %s\n", glGetString(GL_VERSION));
 
-		return window;
+		self->window = window;
 
 	}
 
@@ -223,34 +196,31 @@
 		return shader;
 	}
 
-////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////
-//PUBLIC METHODS
-
 /**
-* Instantiate Render object
-* @param void* eOBJ self
+* Instantiate a Person class vmt
+* @param void* eOBJ Self (Class vmt)
 * @return void
 */
-	void sdl2engine_render_t_instantiate(void * eOBJ)
+	void sdl2engine_render_t_vmt_instantiate(void * eOBJ)
 	{
-		eSELF(SELF_TYPE);
+		//cast eOBJ back into class vmt type pointer
+			eSELF(sdl2engine_render_t_vmt);
 
-		//public methods
-			self->init = &sdl2engine_render_t_init;
-			self->begin = &sdl2engine_render_t_begin;
-			self->end = &sdl2engine_render_t_end;
-			self->quad = &sdl2engine_render_t_quad;
-
-		//private methods vmt - also state
-			self->vmt = eNEW(sdl2engine_render_t_vmt);
-			eCONSTRUCT(sdl2engine_render_t_vmt, self->vmt);
+		//define private methods
+			self->initWindow = &sdl2engine_render_t_initWindow;
+			self->initQuad = &sdl2engine_render_t_initQuad;
+			self->initColorTexture = &sdl2engine_render_t_initColorTexture;
+			self->initShaders = &sdl2engine_render_t_initShaders;
+			self->shaderCreate = &sdl2engine_render_t_shaderCreate;
 
 	}
 
+//PUBLIC METHODS
+
 /**
 * Initialise the window, and quad values in render internal state
+* @id sdl2engine_render_t_init
+* @function init
 * @param void* eOBJ self
 * @param int widthHere window width
 * @param int heightHere window height
@@ -265,7 +235,7 @@
 			self->height = heightHere;
 
 		//actually create window
-			self->window = self->vmt->initWindow(self);
+			self->vmt->initWindow(self);
 
 		//init quad
 			self->vmt->initQuad(self, &self->vmt->state.vao_quad, &self->vmt->state.vbo_quad, &self->vmt->state.ebo_quad);
@@ -296,7 +266,7 @@
 	}
 
 /**
-* End Rendering a frame
+* Render a quad
 * @param void* eOBJ self
 * @param vec2 pos
 * @param vec2 size
@@ -324,5 +294,26 @@
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, NULL);
 
 		glBindVertexArray(0);
+
 	}
 
+/**
+* Instantiate Render object
+* @param void* eOBJ self
+* @return void
+*/
+	void sdl2engine_render_t_instantiate(void * eOBJ)
+	{
+		eSELF(SELF_TYPE);
+
+		//public methods
+			self->init = &sdl2engine_render_t_init;
+			self->begin = &sdl2engine_render_t_begin;
+			self->end = &sdl2engine_render_t_end;
+			self->quad = &sdl2engine_render_t_quad;
+
+		//private methods vmt - also state
+			self->vmt = eNEW(sdl2engine_render_t_vmt);
+			eCONSTRUCT(sdl2engine_render_t_vmt, self->vmt);
+
+	}

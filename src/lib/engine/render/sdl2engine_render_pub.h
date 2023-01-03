@@ -6,19 +6,32 @@
 #include "../linmath.h"
 
 /**
-* Render class PUBLIC structure
+* \struct Render class PUBLIC structure
 */
 	struct sdl2engine_render_t {
 
-		//public properties
-			SDL_Window *window;
-			int width;
-			int height;
+		SDL_Window *window;
+		int width;
+		int height;
 
-		//public methods
+		/**
+		* \see sdl2engine_render_t_init
+		*/
 			void (*init)(void * eOBJ, int widthHere, int heightHere);
+
+		/**
+		* \see sdl2engine_render_t_begin
+		*/
 			void (*begin)();
+
+		/**
+		* \see sdl2engine_render_t_end
+		*/
 			void (*end)(void * eOBJ);
+
+		/**
+		* \see sdl2engine_render_t_quad
+		*/
 			void (*quad)(void * eOBJ, vec2 pos, vec2 size, vec4 color);
 
 		//private methods via virtual method table struct

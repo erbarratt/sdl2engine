@@ -10,19 +10,19 @@
 		eSELF(sdl2engine_time_t);
 	
 		self->frameRate = frameRateHere;
-		self->frame_delay = 1000 / frameRateHere;
+		self->frameDelay = 1000.f / (float)frameRateHere;
 	}
 
 	void sdl2engine_time_t_update(void * eOBJ)
 	{
 		eSELF(sdl2engine_time_t);
 
-		self->now = (uint32_t)SDL_GetTicks();
-		self->delta = (self->now - self->last) / 1000;
+		self->now = (float)SDL_GetTicks();
+		self->delta = (self->now - self->last) / 1000.f;
 		self->last = self->now;
 		++self->frameCount;
 
-		if (self->now - self->frameLast >= 1000) {
+		if (self->now - self->frameLast >= 1000.f) {
 			self->frameRate = self->frameCount;
 			self->frameCount = 0;
 			self->frameLast = self->now;
@@ -32,10 +32,10 @@
 	void sdl2engine_time_t_updateLate(void * eOBJ)
 	{
 		eSELF(sdl2engine_time_t);
-		self->frame_time = (uint32_t)SDL_GetTicks() - self->now;
+		self->frameTime = (float)SDL_GetTicks() - self->now;
 
-		if (self->frame_delay > self->frame_time) {
-			SDL_Delay(self->frame_delay - self->frame_time);
+		if (self->frameDelay > self->frameTime) {
+			SDL_Delay(self->frameDelay - self->frameTime);
 		}
 	}
 

@@ -8,13 +8,13 @@
 */
 	struct sdl2engine_time_t {
 
-		uint32_t delta;
-		uint32_t now;
-		uint32_t last;
+		float delta;
+		float now;
+		float last;
 
-		uint32_t frameLast;
-		uint32_t frame_delay;
-		uint32_t frame_time;
+		float frameLast;
+		float frameDelay;
+		float frameTime;
 
 		uint8_t frameRate;
 		uint32_t frameCount;

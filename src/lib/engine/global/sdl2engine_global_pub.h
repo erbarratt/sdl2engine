@@ -9,11 +9,7 @@
 	struct sdl2engine_global_t {
 
 		struct sdl2engine_render_t* render;
-
-		/**
-		* \see sdl2engine_global_t_createWindow
-		*/
-			void (*createWindow)(void * eOBJ, int widthHere, int heightHere);
+		struct sdl2engine_input_t* input;
 
 	};
 

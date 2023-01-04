@@ -133,7 +133,7 @@
 		* @param m The method
 		* @param ... Other args
 		*/
-			#define eCALL(o, m, ...) (*o->m)(o, __VA_ARGS__)
+			#define eCALLarg(o, m, ...) (*o->m)(o, __VA_ARGS__)
 		
 		/**
 		* Method call wrapper that passes object as first argument for use of eSELF(), no arguments
@@ -141,7 +141,7 @@
 		* @param m The method
 		* @param ... Other args
 		*/
-			#define eCALLna(o,m) (*o->m)(o)
+			#define eCALL(o,m) (*o->m)(o)
 			
 		/**
 		* Free memory on heap for object

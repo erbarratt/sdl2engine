@@ -3,7 +3,7 @@
 #include <errno.h>
 
 #include "sdl2engine_io.h"
-#include "../utils.h"
+#include "../../utils.h"
 
 // 20 MiB, can probably change this to a higher value without issue.
 // Check your target platform.
@@ -11,7 +11,6 @@
 #define IO_READ_ERROR_GENERAL "Error reading filie: %s. errno: %d\n"
 #define IO_READ_ERROR_MEMORY "Not enough free memory to read file: %s\n"
 
-// Adapted from https://stackoverflow.com/a/44894946 (not the chosen answer) by Nominal Animal
 File io_file_read(const char *path) {
 
 	File file = { .is_valid = false };
@@ -27,7 +26,7 @@ File io_file_read(const char *path) {
 	size_t size = 0;
 	size_t n;
 
-	while (true) {
+	while (1) {
 		if (used + IO_READ_CHUNK_SIZE + 1 > size) {
 			size = used + IO_READ_CHUNK_SIZE + 1;
 

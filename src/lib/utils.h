@@ -1,7 +1,3 @@
-//
-// Created by Elliott on 02/01/2023.
-//
-
 #ifndef SDL2ENGINE_UTILS_H
 #define SDL2ENGINE_UTILS_H
 

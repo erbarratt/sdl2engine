@@ -3,7 +3,8 @@
 
 #include "../../eOOPc.h"
 #include <SDL2/SDL.h>
-#include "../linmath.h"
+#include "../../linmath.h"
+
 
 /**
 * \struct Render class PUBLIC structure
@@ -22,7 +23,7 @@
 		/**
 		* \see sdl2engine_render_t_begin
 		*/
-			void (*begin)();
+			void (*begin)(void * eOBJ);
 
 		/**
 		* \see sdl2engine_render_t_end

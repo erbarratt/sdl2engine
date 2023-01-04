@@ -3,16 +3,16 @@
 
 #include "../../eOOPc.h"
 #include <SDL2/SDL.h>
-#include "../linmath.h"
+#include "../../linmath.h"
 
-	typedef struct stateInternal {
+	struct stateInternal {
 		uint32_t vao_quad;
 		uint32_t vbo_quad;
 		uint32_t ebo_quad;
 		uint32_t shader_default;
 		uint32_t texture_color;
 		mat4x4 projection;
-	} stateInternal;
+	};
 
 /**
 * Render class PRIVATE vmt structure

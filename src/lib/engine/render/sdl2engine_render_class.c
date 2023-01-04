@@ -5,7 +5,7 @@
 #include <glad/glad.h>
 #include <SDL2/SDL.h>
 
-#include "../utils.h"
+#include "../../utils.h"
 #include "../io/sdl2engine_io.h"
 
 #define SELF_TYPE sdl2engine_render_t
@@ -28,7 +28,7 @@
 * @param void* eOBJ Self (class)
 * @return void
 */
-	void sdl2engine_render_t_initWindow(void * eOBJ)
+	static void sdl2engine_render_t_initWindow(void * eOBJ)
 	{
 		//cast eOBJ back into class (NOT vmt!) type pointer
 			eSELF(SELF_TYPE);
@@ -74,7 +74,7 @@
 * @param void* eOBJ Self (class)
 * @return SDL_Window
 */
-	void sdl2engine_render_t_initQuad(void * eOBJ, uint32_t *vao, uint32_t *vbo, uint32_t *ebo)
+	static void sdl2engine_render_t_initQuad(void * eOBJ, uint32_t *vao, uint32_t *vbo, uint32_t *ebo)
 	{
 		//cast eOBJ back into class (NOT vmt!) type pointer
 			eSELF(SELF_TYPE);
@@ -117,7 +117,7 @@
 
 	}
 
-	void sdl2engine_render_t_initColorTexture(void * eOBJ, uint32_t *texture)
+	static void sdl2engine_render_t_initColorTexture(void * eOBJ, uint32_t *texture)
 	{
 		glGenTextures(1, texture);
 		glBindTexture(GL_TEXTURE_2D, *texture);
@@ -128,7 +128,7 @@
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
-	void sdl2engine_render_t_initShaders(void * eOBJ)
+	static void sdl2engine_render_t_initShaders(void * eOBJ)
 	{
 		//cast eOBJ back into class (NOT vmt!) type pointer
 			eSELF(SELF_TYPE);
@@ -147,7 +147,7 @@
 
 	}
 
-	uint32_t sdl2engine_render_t_shaderCreate(const char * path_vert, const char * path_frag)
+	static uint32_t sdl2engine_render_t_shaderCreate(const char * path_vert, const char * path_frag)
 	{
 		int success;
 		char log[512];
@@ -226,7 +226,7 @@
 * @param int heightHere window height
 * @return void
 */
-	void sdl2engine_render_t_init(void * eOBJ, int widthHere, int heightHere)
+	static void sdl2engine_render_t_init(void * eOBJ, int widthHere, int heightHere)
 	{
 		eSELF(SELF_TYPE);
 
@@ -248,7 +248,7 @@
 * Begin Rendering a frame
 * @return void
 */
-	void sdl2engine_render_t_begin()
+	static void sdl2engine_render_t_begin(void * eOBJ)
 	{
 		glClearColor(0.08f, 0.1f, 0.1f, 1);
 		glClear(GL_COLOR_BUFFER_BIT);
@@ -259,7 +259,7 @@
 * @param void* eOBJ self
 * @return void
 */
-	void sdl2engine_render_t_end(void * eOBJ)
+	static void sdl2engine_render_t_end(void * eOBJ)
 	{
 		eSELF(SELF_TYPE);
 		SDL_GL_SwapWindow(self->window);
@@ -273,7 +273,7 @@
 * @param vec4 color
 * @return void
 */
-	void sdl2engine_render_t_quad(void * eOBJ, vec2 pos, vec2 size, vec4 color)
+	static void sdl2engine_render_t_quad(void * eOBJ, vec2 pos, vec2 size, vec4 color)
 	{
 		eSELF(SELF_TYPE);
 

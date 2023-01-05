@@ -1,5 +1,5 @@
-#ifndef SDL2ENGINE_UTILS_H
-#define SDL2ENGINE_UTILS_H
+#ifndef UTILS_H
+#define UTILS_H
 
 #include <stdio.h>
 
@@ -20,4 +20,4 @@
 #define PURPLE (vec4){0.5, 0, 1, 1}
 #define TURQUOISE (vec4){0, 1, 0.5, 1}
 
-#endif //SDL2ENGINE_UTILS_H
+#endif //UTILS_H

@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <errno.h>
 
-#include "sdl2engine_io.h"
+#include "io.h"
 #include "../../utils.h"
 
 // 20 MiB, can probably change this to a higher value without issue.

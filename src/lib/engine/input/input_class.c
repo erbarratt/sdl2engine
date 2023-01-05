@@ -1,5 +1,5 @@
-#include "sdl2engine_input_pub.h"
-#include "sdl2engine_input_class.h"
+#include "input_pub.h"
+#include "input_class.h"
 
 #include "../../eOOPc.h"
 
@@ -13,7 +13,7 @@
 * @param keyState_t * keyStateHere
 * @return void
 */
-	static void sdl2engine_input_t_updateKeyState(uint8_t currentState, keyState_t * keyStateHere)
+	static void input_t_updateKeyState(uint8_t currentState, keyState_t * keyStateHere)
 	{
 		if(currentState){
 			if(*keyStateHere > 0){
@@ -31,13 +31,13 @@
 * @param void* eOBJ self
 * @return void
 */
-	void sdl2engine_input_t_vmt_instantiate(void * eOBJ)
+	void input_t_vmt_instantiate(void * eOBJ)
 	{
 		//cast eOBJ back into class vmt type pointer
-			eSELF(sdl2engine_input_t_vmt);
+			eSELF(input_t_vmt);
 
 		//link functions
-			self->updateKeyState = &sdl2engine_input_t_updateKeyState;
+			self->updateKeyState = &input_t_updateKeyState;
 	}
 
 /**
@@ -45,9 +45,9 @@
 * @param void* eOBJ self
 * @return void
 */
-	void sdl2engine_input_t_update(void * eOBJ)
+	void input_t_update(void * eOBJ)
 	{
-		eSELF(sdl2engine_input_t);
+		eSELF(input_t);
 
 		const uint8_t * keyboardState = SDL_GetKeyboardState(NULL);
 
@@ -64,16 +64,16 @@
 * @param void* eOBJ self
 * @return void
 */
-	void sdl2engine_input_t_instantiate(void * eOBJ)
+	void input_t_instantiate(void * eOBJ)
 	{
-		eSELF(sdl2engine_input_t);
+		eSELF(input_t);
 
 		//public methods
-			self->update = &sdl2engine_input_t_update;
+			self->update = &input_t_update;
 
 		//private methods vmt - also state
-			self->vmt = eNEW(sdl2engine_input_t_vmt);
-			eCONSTRUCT(sdl2engine_input_t_vmt, self->vmt);
+			self->vmt = eNEW(input_t_vmt);
+			eCONSTRUCT(input_t_vmt, self->vmt);
 
 		//default binds for now
 			self->keybinds[INPUT_KEY_LEFT] = SDL_GetScancodeFromName("A");

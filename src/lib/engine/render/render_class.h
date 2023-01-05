@@ -1,5 +1,5 @@
-#ifndef SDL2ENGINE_SDL2ENGINE_RENDER_CLASS_H
-#define SDL2ENGINE_SDL2ENGINE_RENDER_CLASS_H
+#ifndef RENDER_CLASS_H
+#define RENDER_CLASS_H
 
 #include "../../eOOPc.h"
 #include <SDL2/SDL.h>
@@ -17,7 +17,7 @@
 /**
 * Render class PRIVATE vmt structure
 */
-	struct sdl2engine_render_t_vmt {
+	struct render_t_vmt {
 
 		struct stateInternal state;
 
@@ -33,7 +33,7 @@
 * \struct Render class PRIVATE structure
 */
 	typedef struct {
-		struct sdl2engine_render_t_vmt * vmt;
-	} sdl2engine_render_t;
+		struct render_t_vmt * vmt;
+	} render_t;
 
-#endif //SDL2ENGINE_SDL2ENGINE_RENDER_CLASS_H
+#endif //RENDER_CLASS_H

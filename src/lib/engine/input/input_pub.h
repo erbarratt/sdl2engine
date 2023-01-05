@@ -1,5 +1,5 @@
-#ifndef SDL2ENGINE_SDL2ENGINE_INPUT_PUB_H
-#define SDL2ENGINE_SDL2ENGINE_INPUT_PUB_H
+#ifndef INPUT_PUB_H
+#define INPUT_PUB_H
 
 #include <stdint.h>
 
@@ -20,7 +20,7 @@
 /**
 * Input class PUBLIC structure
 */
-	struct sdl2engine_input_t {
+	struct input_t {
 
 		uint8_t keybinds[5];
 		keyState_t left;
@@ -30,18 +30,18 @@
 		keyState_t escape;
 
 		/**
-		* \see sdl2engine_input_t_update
+		* \see input_t_update
 		*/
 			void (*update)(void * eOBJ);
 
 		//private methods via virtual method table struct
-			struct sdl2engine_input_t_vmt* vmt;
+			struct input_t_vmt* vmt;
 
 	};
 
 /**
-* \see sdl2engine_input_t_instantiate
+* \see input_t_instantiate
 */
-	void sdl2engine_input_t_instantiate(void * eOBJ);
+	void input_t_instantiate(void * eOBJ);
 
-#endif //SDL2ENGINE_SDL2ENGINE_INPUT_PUB_H
+#endif //INPUT_PUB_H

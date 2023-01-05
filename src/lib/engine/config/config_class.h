@@ -1,0 +1,4 @@
+#ifndef CONFIG_CLASS_H
+#define CONFIG_CLASS_H
+
+#endif //CONFIG_CLASS_H

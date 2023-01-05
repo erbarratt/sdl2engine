@@ -1,21 +1,21 @@
-#include "sdl2engine_time_pub.h"
-#include "sdl2engine_time_class.h"
+#include "timers_pub.h"
+#include "timers_class.h"
 
 #include "../../eOOPc.h"
 
 #include <SDL2/SDL.h>
 
-	void sdl2engine_time_t_init(void * eOBJ, uint8_t frameRateHere)
+	void timers_t_init(void * eOBJ, uint8_t frameRateHere)
 	{
-		eSELF(sdl2engine_time_t);
+		eSELF(timers_t);
 	
 		self->frameRate = frameRateHere;
 		self->frameDelay = 1000.f / (float)frameRateHere;
 	}
 
-	void sdl2engine_time_t_update(void * eOBJ)
+	void timers_t_update(void * eOBJ)
 	{
-		eSELF(sdl2engine_time_t);
+		eSELF(timers_t);
 
 		self->now = (float)SDL_GetTicks();
 		self->delta = (self->now - self->last) / 1000.f;
@@ -29,9 +29,9 @@
 		}
 	}
 
-	void sdl2engine_time_t_updateLate(void * eOBJ)
+	void timers_t_updateLate(void * eOBJ)
 	{
-		eSELF(sdl2engine_time_t);
+		eSELF(timers_t);
 		self->frameTime = (float)SDL_GetTicks() - self->now;
 
 		if (self->frameDelay > self->frameTime) {
@@ -44,12 +44,12 @@
 * @param void* eOBJ self
 * @return void
 */
-	void sdl2engine_time_t_instantiate(void * eOBJ)
+	void timers_t_instantiate(void * eOBJ)
 	{
-		eSELF(sdl2engine_time_t);
+		eSELF(timers_t);
 
-		self->init = &sdl2engine_time_t_init;
-		self->update = &sdl2engine_time_t_update;
-		self->updateLate = &sdl2engine_time_t_updateLate;
+		self->init = &timers_t_init;
+		self->update = &timers_t_update;
+		self->updateLate = &timers_t_updateLate;
 
 	}

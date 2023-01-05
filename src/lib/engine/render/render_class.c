@@ -1,14 +1,14 @@
-#include "sdl2engine_render_pub.h"
-#include "sdl2engine_render_class.h"
+#include "render_pub.h"
+#include "render_class.h"
 
 //opengl loader
-#include <glad/glad.h>
+#include <glad/include/glad/glad.h>
 #include <SDL2/SDL.h>
 
 #include "../../utils.h"
-#include "../io/sdl2engine_io.h"
+#include "../io/io.h"
 
-#define SELF_TYPE sdl2engine_render_t
+#define SELF_TYPE render_t
 
 //when in dev, executable will be in cmake subfolder
 //therefor, to open a file in project root, we need to shift up one directory first
@@ -28,7 +28,7 @@
 * @param void* eOBJ Self (class)
 * @return void
 */
-	static void sdl2engine_render_t_initWindow(void * eOBJ)
+	static void render_t_initWindow(void * eOBJ)
 	{
 		//cast eOBJ back into class (NOT vmt!) type pointer
 			eSELF(SELF_TYPE);
@@ -45,8 +45,8 @@
 			"SDL2Engine",
 			SDL_WINDOWPOS_UNDEFINED,
 			SDL_WINDOWPOS_UNDEFINED,
-			self->width,
-			self->height,
+			self->windowWidth,
+			self->windowHeight,
 			SDL_WINDOW_OPENGL
 		);
 
@@ -74,7 +74,7 @@
 * @param void* eOBJ Self (class)
 * @return SDL_Window
 */
-	static void sdl2engine_render_t_initQuad(void * eOBJ, uint32_t *vao, uint32_t *vbo, uint32_t *ebo)
+	static void render_t_initQuad(void * eOBJ, uint32_t *vao, uint32_t *vbo, uint32_t *ebo)
 	{
 		//cast eOBJ back into class (NOT vmt!) type pointer
 			eSELF(SELF_TYPE);
@@ -117,7 +117,7 @@
 
 	}
 
-	static void sdl2engine_render_t_initColorTexture(void * eOBJ, uint32_t *texture)
+	static void render_t_initColorTexture(void * eOBJ, uint32_t *texture)
 	{
 		glGenTextures(1, texture);
 		glBindTexture(GL_TEXTURE_2D, *texture);
@@ -128,14 +128,14 @@
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
-	static void sdl2engine_render_t_initShaders(void * eOBJ)
+	static void render_t_initShaders(void * eOBJ)
 	{
 		//cast eOBJ back into class (NOT vmt!) type pointer
 			eSELF(SELF_TYPE);
 
 		self->vmt->state.shader_default = self->vmt->shaderCreate(DIR_SHIFT"shaders/default.vert", DIR_SHIFT"shaders/default.frag");
 
-		mat4x4_ortho(self->vmt->state.projection, 0, self->width, 0, self->height, -2, 2);
+		mat4x4_ortho(self->vmt->state.projection, 0, self->renderWidth, 0, self->renderHeight, -2, 2);
 
 		glUseProgram(self->vmt->state.shader_default);
 		glUniformMatrix4fv(
@@ -147,7 +147,7 @@
 
 	}
 
-	static uint32_t sdl2engine_render_t_shaderCreate(const char * path_vert, const char * path_frag)
+	static uint32_t render_t_shaderCreate(const char * path_vert, const char * path_frag)
 	{
 		int success;
 		char log[512];
@@ -201,17 +201,17 @@
 * @param void* eOBJ Self (Class vmt)
 * @return void
 */
-	void sdl2engine_render_t_vmt_instantiate(void * eOBJ)
+	void render_t_vmt_instantiate(void * eOBJ)
 	{
 		//cast eOBJ back into class vmt type pointer
-			eSELF(sdl2engine_render_t_vmt);
+			eSELF(render_t_vmt);
 
 		//define private methods
-			self->initWindow = &sdl2engine_render_t_initWindow;
-			self->initQuad = &sdl2engine_render_t_initQuad;
-			self->initColorTexture = &sdl2engine_render_t_initColorTexture;
-			self->initShaders = &sdl2engine_render_t_initShaders;
-			self->shaderCreate = &sdl2engine_render_t_shaderCreate;
+			self->initWindow = &render_t_initWindow;
+			self->initQuad = &render_t_initQuad;
+			self->initColorTexture = &render_t_initColorTexture;
+			self->initShaders = &render_t_initShaders;
+			self->shaderCreate = &render_t_shaderCreate;
 
 	}
 
@@ -219,20 +219,23 @@
 
 /**
 * Initialise the window, and quad values in render internal state
-* @id sdl2engine_render_t_init
+* @id render_t_init
 * @function init
 * @param void* eOBJ self
 * @param int widthHere window width
 * @param int heightHere window height
 * @return void
 */
-	static void sdl2engine_render_t_init(void * eOBJ, int widthHere, int heightHere)
+	static void render_t_init(void * eOBJ, uint32_t windowWidthHere, uint32_t windowHeightHere, uint32_t renderWidthHere, uint32_t renderHeightHere, uint32_t scaleHere)
 	{
 		eSELF(SELF_TYPE);
 
 		//define props
-			self->width = widthHere;
-			self->height = heightHere;
+			self->windowWidth = windowWidthHere;
+			self->windowHeight = windowHeightHere;
+			self->renderWidth = renderWidthHere;
+			self->renderHeight = renderHeightHere;
+			self->scale = scaleHere;
 
 		//actually create window
 			self->vmt->initWindow(self);
@@ -242,13 +245,16 @@
 			self->vmt->initShaders(self);
 			self->vmt->initColorTexture(self, &self->vmt->state.texture_color);
 
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 	}
 
 /**
 * Begin Rendering a frame
 * @return void
 */
-	static void sdl2engine_render_t_begin(void * eOBJ)
+	static void render_t_begin(void * eOBJ)
 	{
 		glClearColor(0.08f, 0.1f, 0.1f, 1);
 		glClear(GL_COLOR_BUFFER_BIT);
@@ -259,7 +265,7 @@
 * @param void* eOBJ self
 * @return void
 */
-	static void sdl2engine_render_t_end(void * eOBJ)
+	static void render_t_end(void * eOBJ)
 	{
 		eSELF(SELF_TYPE);
 		SDL_GL_SwapWindow(self->window);
@@ -273,7 +279,7 @@
 * @param vec4 color
 * @return void
 */
-	static void sdl2engine_render_t_quad(void * eOBJ, vec2 pos, vec2 size, vec4 color)
+	static void render_t_quad(void * eOBJ, vec2 pos, vec2 size, vec4 color)
 	{
 		eSELF(SELF_TYPE);
 
@@ -302,18 +308,18 @@
 * @param void* eOBJ self
 * @return void
 */
-	void sdl2engine_render_t_instantiate(void * eOBJ)
+	void render_t_instantiate(void * eOBJ)
 	{
 		eSELF(SELF_TYPE);
 
 		//public methods
-			self->init = &sdl2engine_render_t_init;
-			self->begin = &sdl2engine_render_t_begin;
-			self->end = &sdl2engine_render_t_end;
-			self->quad = &sdl2engine_render_t_quad;
+			self->init = &render_t_init;
+			self->begin = &render_t_begin;
+			self->end = &render_t_end;
+			self->quad = &render_t_quad;
 
 		//private methods vmt - also state
-			self->vmt = eNEW(sdl2engine_render_t_vmt);
-			eCONSTRUCT(sdl2engine_render_t_vmt, self->vmt);
+			self->vmt = eNEW(render_t_vmt);
+			eCONSTRUCT(render_t_vmt, self->vmt);
 
 	}

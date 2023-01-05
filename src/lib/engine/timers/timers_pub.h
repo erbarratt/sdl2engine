@@ -1,12 +1,12 @@
-#ifndef SDL2ENGINE_SDL2ENGINE_TIME_PUB_H
-#define SDL2ENGINE_SDL2ENGINE_TIME_PUB_H
+#ifndef TIME_PUB_H
+#define TIME_PUB_H
 
 #include <stdint.h>
 
 /**
 * Time class PUBLIC structure
 */
-	struct sdl2engine_time_t {
+	struct timers_t {
 
 		float delta;
 		float now;
@@ -20,25 +20,25 @@
 		uint32_t frameCount;
 
 		/**
-		* \see sdl2engine_time_t_init
+		* \see timers_t_init
 		*/
 			void (*init)(void * eOBJ, uint8_t frameRateHere);
 
 		/**
-		* \see sdl2engine_time_t_update
+		* \see timers_t_update
 		*/
 			void (*update)(void * eOBJ);
 
 		/**
-		* \see sdl2engine_time_t_updateLate
+		* \see timers_t_updateLate
 		*/
 			void (*updateLate)(void * eOBJ);
 
 	};
 
 /**
-* \see sdl2engine_input_t_instantiate
+* \see input_t_instantiate
 */
-	void sdl2engine_time_t_instantiate(void * eOBJ);
+	void timers_t_instantiate(void * eOBJ);
 
-#endif //SDL2ENGINE_SDL2ENGINE_TIME_PUB_H
+#endif //TIME_PUB_H

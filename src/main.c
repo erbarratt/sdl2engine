@@ -3,26 +3,26 @@
 #include <SDL2/SDL.h>
 #include <stdbool.h>
 
-#include "lib/engine/config/sdl2engine_config_pub.h"
-#include "lib/engine/render/sdl2engine_render_pub.h"
-#include "lib/engine/input/sdl2engine_input_pub.h"
-#include "lib/engine/time/sdl2engine_time_pub.h"
+#include <engine/config/config_pub.h>
+#include <engine/render/render_pub.h>
+#include <engine/input/input_pub.h>
+#include <engine/timers/timers_pub.h>
 
 int main(int argc, char *argv[])
 {
 
 	//engine objects
-		struct sdl2engine_render_t * render = eNEW(sdl2engine_render_t);
-		eCONSTRUCT(sdl2engine_render_t, render);
+		struct render_t * render = eNEW(render_t);
+		eCONSTRUCT(render_t, render);
 
-		struct sdl2engine_input_t * input = eNEW(sdl2engine_input_t);
-		eCONSTRUCT(sdl2engine_input_t, input);
+		struct input_t * input = eNEW(input_t);
+		eCONSTRUCT(input_t, input);
 
-		struct sdl2engine_config_t * config = eNEW(sdl2engine_config_t);
-		eCONSTRUCT(sdl2engine_config_t, config);
+		struct config_t * config = eNEW(config_t);
+		eCONSTRUCT(config_t, config);
 
-		struct sdl2engine_time_t * time = eNEW(sdl2engine_time_t);
-		eCONSTRUCT(sdl2engine_time_t, time);
+		struct timers_t * time = eNEW(timers_t);
+		eCONSTRUCT(timers_t, time);
 
 	//start timers @ x fps
 		time->init(time, 60);
@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
 		config->parseConfig(config, input);
 
 	//create window
-		render->init(render, 800, 600);
+		render->init(render, 1920, 1080, 640, 360, 3);
 
 	//main loop
 		bool shouldQuit = false;
@@ -55,7 +55,7 @@ int main(int argc, char *argv[])
 
 			render->quad(
 				render,
-				(vec2){(float)(render->width*0.5), (float)(render->height*0.5), },
+				(vec2){(float)(render->renderWidth*0.5), (float)(render->renderHeight*0.5) },
 				(vec2){50, 50},
 				(vec4){0,1,0,1}
 			);

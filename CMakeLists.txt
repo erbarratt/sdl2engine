@@ -10,10 +10,10 @@ find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIR})
 
 #define all source files
-set(SOURCE_FILES src/main.c src/lib/glad/src/glad.c src/lib/eOOPc.h src/lib/engine/global/sdl2engine_global_class.c src/lib/engine/global/sdl2engine_global_class.h src/lib/engine/render/sdl2engine_render_pub.h src/lib/linmath.h src/lib/engine/render/sdl2engine_render_class.c src/lib/engine/render/sdl2engine_render_class.h src/lib/engine/global/sdl2engine_global_pub.h src/lib/engine/io/sdl2engine_io.c src/lib/engine/io/sdl2engine_io.h src/lib/utils.h src/lib/utils.h src/lib/engine/input/sdl2engine_input_class.h src/lib/engine/input/sdl2engine_input_class.c src/lib/engine/input/sdl2engine_input_pub.h src/lib/engine/time/sdl2engine_time_class.c src/lib/engine/config/sdl2engine_config_class.c src/lib/engine/config/sdl2engine_config_class.h src/lib/engine/config/sdl2engine_config_pub.h)
+set(SOURCE_FILES src/main.c src/lib/glad/src/glad.c src/lib/eOOPc.h src/lib/engine/global/global_class.c src/lib/engine/global/global_class.h src/lib/engine/render/render_pub.h src/lib/linmath.h src/lib/engine/render/render_class.c src/lib/engine/render/render_class.h src/lib/engine/global/global_pub.h src/lib/engine/io/io.c src/lib/engine/io/io.h src/lib/utils.h src/lib/utils.h src/lib/engine/input/input_class.h src/lib/engine/input/input_class.c src/lib/engine/input/input_pub.h src/lib/engine/timers/timers_class.c src/lib/engine/config/config_class.c src/lib/engine/config/config_class.h src/lib/engine/config/config_pub.h)
 
 #set include dir's so includes work in IDE
-include_directories(src/lib/glad/include)
+include_directories(src/lib)
 
 add_executable(sdl2engine ${SOURCE_FILES})
 

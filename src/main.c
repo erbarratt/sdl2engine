@@ -55,9 +55,16 @@ int main(int argc, char *argv[])
 
 			render->quad(
 				render,
-				(vec2){(float)(render->renderWidth*0.5), (float)(render->renderHeight*0.5) },
+				(vec2){(float)(render->renderWidth*0.5)-25, (float)(render->renderHeight*0.5)-25 },
 				(vec2){50, 50},
 				(vec4){0,1,0,1}
+			);
+
+			render->quad(
+				render,
+				(vec2){(float)(render->renderWidth*0.5)-60, (float)(render->renderHeight*0.5)-60 },
+				(vec2){25, 25},
+				(vec4){0,0,1,1}
 			);
 
 			eCALL(render, end);
@@ -74,3 +81,5 @@ int main(int argc, char *argv[])
 	return 0;
 
 }
+
+

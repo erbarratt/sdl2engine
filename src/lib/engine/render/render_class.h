@@ -6,11 +6,11 @@
 #include "../../linmath.h"
 
 	struct stateInternal {
-		uint32_t vao_quad;
-		uint32_t vbo_quad;
-		uint32_t ebo_quad;
-		uint32_t shader_default;
-		uint32_t texture_color;
+		uint32_t vaoQuad; //vertex array object
+		uint32_t vboQuad; //vertex array buffer object
+		uint32_t eboQuad; //element array buffer
+		uint32_t shaderDefault;
+		uint32_t textureColor;
 		mat4x4 projection;
 	};
 
@@ -21,11 +21,30 @@
 
 		struct stateInternal state;
 
-		void (*initWindow)(void * eOBJ);
-		void (*initQuad)(void * eOBJ, uint32_t *vao, uint32_t *vbo, uint32_t *ebo);
-		void (*initColorTexture)(void * eOBJ, uint32_t *texture);
-		void (*initShaders)(void * eOBJ);
-		uint32_t (*shaderCreate)(const char * path_vert, const char * path_frag);
+		/**
+		* \see render_t_initWindow
+		*/
+			void (*initWindow)(void * eOBJ);
+
+		/**
+		* \see render_t_initQuad
+		*/
+			void (*initQuad)(void * eOBJ);
+
+		/**
+		* \see render_t_initColorTexture
+		*/
+			void (*initColorTexture)(void * eOBJ);
+
+		/**
+		* \see render_t_initShaders
+		*/
+			void (*initShaders)(void * eOBJ);
+
+		/**
+		* \see render_t_shaderCreate
+		*/
+			uint32_t (*shaderCreate)(const char * path_vert, const char * path_frag);
 
 	};
 

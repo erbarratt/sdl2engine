@@ -70,76 +70,153 @@
 	}
 
 /**
-* Initialise a quad
+* Initialise a quad and store for use in state member
+* render_t_quad uses this default quad to manipulate and draw instead of creating a new quad every time
 * @param void* eOBJ Self (class)
 * @return SDL_Window
 */
-	static void render_t_initQuad(void * eOBJ, uint32_t *vao, uint32_t *vbo, uint32_t *ebo)
+	static void render_t_initQuad(void * eOBJ)
 	{
 		//cast eOBJ back into class (NOT vmt!) type pointer
 			eSELF(SELF_TYPE);
 
-		// x, y, x, u, v
+		// x, y, z, u, v
+		//quad of "size" 1, with origin bottom left
+
+		//	float vertices[] = {
+		//		-0.5f, 0.5f, 0, 1, 0,
+		//		0.5f, 0.5f, 0,0,0,
+		//		0.5f, -0.5f, 0, 0, 1,
+		//		-0.5f, -0.5f, 0, 1, 1,
+		//	};
+
 			float vertices[] = {
-				0.5f, 0.5f, 0,0,0,
-				0.5f, -0.5f, 0, 0, 1,
-				-0.5f, -0.5f, 0, 1, 1,
-				-0.5f, 0.5f, 0, 1, 0
+				0, 1, 0, 0, 1,
+				1, 1, 0,1,1,
+				1, 0, 0, 0, 1,
+				0, 0, 0, 0, 0,
 			};
 
-		uint32_t indices [] ={
-			0, 1, 3,
-			1, 2, 3
-		};
+		//		_______
+		//		0    /1
+		//		|  /  |
+		//		3/____2
+		//
+			uint32_t indices [] = {
+				0, 1, 3,
+				1, 2, 3
+			};
 
 		//store into state members
-		glGenVertexArrays(1, vao);
-		glGenBuffers(1, vbo);
-		glGenBuffers(1, ebo);
+		//generate vertex array object names
+			glGenVertexArrays(1, &self->vmt->state.vaoQuad);
 
-		glBindVertexArray(*vao);
+		//generate buffer object names
+			glGenBuffers(1, &self->vmt->state.vboQuad);
+			glGenBuffers(1, &self->vmt->state.eboQuad);
 
-		glBindBuffer(GL_ARRAY_BUFFER, *vbo);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+		// bind a vertex array object into the DATA of the now named array object
+			glBindVertexArray(self->vmt->state.vaoQuad);
 
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, *ebo);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+		//bind a named buffer object - GL_ARRAY_BUFFER - Vertex attributes
+		//i.e. get buffer ready for vertices
+			glBindBuffer(GL_ARRAY_BUFFER, self->vmt->state.vboQuad);
+		//put the vertices data into the buffer
+			glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+		//now do the same with vertex indices
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, self->vmt->state.eboQuad);
+			glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
 		//xyz
-		glVertexAttribPointer(0,3, GL_FLOAT, GL_FALSE, 5*sizeof(float), NULL);
-		glEnableVertexAttribArray(0);
+		//define an array of generic vertex attribute data, at index 0
+			glVertexAttribPointer(
+				0,							//index 0, i.e. first
+				3, 							//number of components per attribute (i.e. first 3 in each array line of vertices above
+				GL_FLOAT, 					//stored as floats
+				GL_FALSE, 					//don't normalize
+				5*sizeof(float), 			//byte offset between vertices (lines in array above), 5 as each line is 5 elements
+				NULL						//start at beginning of line (x)
+			);
+		//Enable or disable a generic vertex attribute array, at index 0 - just created
+			glEnableVertexAttribArray(0);
 
 		//uv
-		glVertexAttribPointer(1,2, GL_FLOAT, GL_FALSE, 5*sizeof(float), (void*)(3 * sizeof(float ) ));
-		glEnableVertexAttribArray(1);
+			glVertexAttribPointer(
+				1,								//index 1 (second)
+				2, 								//number of components per attribute u,v
+				GL_FLOAT, 						//as floats
+				GL_FALSE, 						//don't normalize
+				5*sizeof(float), 				//byte offset between vertices (lines in array above), 5 as each line is 5 elements
+				(void*)(3 * sizeof(float ) )	//start at 4th element (u)
+			);
+		//Enable or disable a generic vertex attribute array, at index 1 - just created
+			glEnableVertexAttribArray(1);
 
 		glBindVertexArray(0);
 
 	}
 
-	static void render_t_initColorTexture(void * eOBJ, uint32_t *texture)
+/**
+* Initialise a color texture and store for use in state member
+* @param void* eOBJ Self (class)
+* @return SDL_Window
+*/
+	static void render_t_initColorTexture(void * eOBJ)
 	{
-		glGenTextures(1, texture);
-		glBindTexture(GL_TEXTURE_2D, *texture);
+		//cast eOBJ back into class (NOT vmt!) type pointer
+			eSELF(SELF_TYPE);
 
-		uint8_t solid_white[4] = {255,255,255,255};
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, solid_white);
+		glGenTextures(1, &self->vmt->state.textureColor);
+		glBindTexture(GL_TEXTURE_2D, self->vmt->state.textureColor);
+		uint8_t color[] = {255,255,255,255};
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, color);
 
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
+/**
+* Initialise default shaders and store for use in state member
+* @param void* eOBJ Self (class)
+* @return SDL_Window
+*/
 	static void render_t_initShaders(void * eOBJ)
 	{
 		//cast eOBJ back into class (NOT vmt!) type pointer
 			eSELF(SELF_TYPE);
 
-		self->vmt->state.shader_default = self->vmt->shaderCreate(DIR_SHIFT"shaders/default.vert", DIR_SHIFT"shaders/default.frag");
+		self->vmt->state.shaderDefault = self->vmt->shaderCreate(DIR_SHIFT"shaders/default.vert", DIR_SHIFT"shaders/default.frag");
+
+		//orthographic projection in case of 640 x 360 =
+		//i.e. create projection matrix to use in the default shader programs
+
+		//	M[0][0] = 2.f/(640-0) = 0.003125;
+		//	M[0][1] = M[0][2] = M[0][3] = 0.f;
+		//
+		//	M[1][1] = 2.f/(360-0) = 0.00555555555;
+		//	M[1][0] = M[1][2] = M[1][3] = 0.f;
+		//
+		//	M[2][2] = -2.f/(2- -2) = -0.5;
+		//	M[2][0] = M[2][1] = M[2][3] = 0.f;
+		//
+		//	M[3][0] = -(640+0)/(640-0) = -1;
+		//	M[3][1] = -(360+0)/(360-0) = -1;
+		//	M[3][2] = -(2+ -2)/(2- -2) = -0;
+		//	M[3][3] = 1.f;
+		//
+		//	[0.003125 0 0 0]
+		//	[0 0.00555555555 0 0]
+		//	[0 0 -0.5 0]
+		//	[-1 -1 0 1]
 
 		mat4x4_ortho(self->vmt->state.projection, 0, self->renderWidth, 0, self->renderHeight, -2, 2);
 
-		glUseProgram(self->vmt->state.shader_default);
+		//set which program we're using
+			glUseProgram(self->vmt->state.shaderDefault);
+
+		//put that projection matrix as the value in the uniform projection object in the shader
 		glUniformMatrix4fv(
-			glGetUniformLocation(self->vmt->state.shader_default, "projection"),
+			glGetUniformLocation(self->vmt->state.shaderDefault, "projection"),
 			1,
 			GL_FALSE,
 			&self->vmt->state.projection[0][0]
@@ -147,6 +224,12 @@
 
 	}
 
+/**
+* Create a shader object using file locations and return pointer to object
+* @param const char * path_vert
+* @param const char * path_frag
+* @return uint32_t pointer address
+*/
 	static uint32_t render_t_shaderCreate(const char * path_vert, const char * path_frag)
 	{
 		int success;
@@ -240,12 +323,16 @@
 		//actually create window
 			self->vmt->initWindow(self);
 
-		//init quad
-			self->vmt->initQuad(self, &self->vmt->state.vao_quad, &self->vmt->state.vbo_quad, &self->vmt->state.ebo_quad);
+		//initiase state members
+			self->vmt->initQuad(self);
 			self->vmt->initShaders(self);
-			self->vmt->initColorTexture(self, &self->vmt->state.texture_color);
+			self->vmt->initColorTexture(self);
 
+			// enable or disable server-side GL capabilities
+			// blend the computed fragment color values with the values in the color buffers.
 			glEnable(GL_BLEND);
+
+			//specify pixel arithmetic
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	}
@@ -256,7 +343,11 @@
 */
 	static void render_t_begin(void * eOBJ)
 	{
-		glClearColor(0.08f, 0.1f, 0.1f, 1);
+		//specify clear values for the color buffers
+		glClearColor(0, 0, 0, 1);
+
+		//clear buffers to preset values
+		//GL_COLOR_BUFFER_BIT = the buffers currently enabled for color writing.
 		glClear(GL_COLOR_BUFFER_BIT);
 	}
 
@@ -268,6 +359,7 @@
 	static void render_t_end(void * eOBJ)
 	{
 		eSELF(SELF_TYPE);
+		//Update a window with OpenGL rendering, i.e. send drawn frame to window
 		SDL_GL_SwapWindow(self->window);
 	}
 
@@ -283,21 +375,64 @@
 	{
 		eSELF(SELF_TYPE);
 
-		glUseProgram(self->vmt->state.shader_default);
+		//Installs a program object as part of current rendering state
+			glUseProgram(self->vmt->state.shaderDefault);
 
-		mat4x4 model;
-		mat4x4_identity(model);
+		//matrix
+			mat4x4 model;
+
+		//translate does mat4x4_identity()
+		//
+		//	[1 0 0 0]
+		//	[0 1 0 0]
+		//	[0 0 1 0]
+		//	[0 0 0 1]
+		//
+		//then applies:
+		//
+		//	[1 0 0 0]
+		//	[0 1 0 0]
+		//	[0 0 1 0]
+		//	[x y z 1]
 
 		mat4x4_translate(model, pos[0], pos[1], 0);
+
+		//scale each element by a factor in x, y, z
+		//[3] element of matrix is simply duplicated
+		//second arg = same matrix means scaling by itself
+		//eg scale to x = 50, y = 50, z = 1
+		//
+		//	[50 0 0 0]
+		//	[0 50 0 0]
+		//	[0 0 1 0]
+		//	[x y z 1]
+
 		mat4x4_scale_aniso(model, model, size[0], size[1], 1);
 
-		glUniformMatrix4fv(glGetUniformLocation(self->vmt->state.shader_default, "model"), 1, GL_FALSE, &model[0][0]);
-		glUniform4fv(glGetUniformLocation(self->vmt->state.shader_default, "color"), 1, color);
+		//put the values into the shader
 
-		glBindVertexArray(self->vmt->state.vao_quad);
+			//Specify the value of a uniform variable for the current program object
+				glUniformMatrix4fv(
+					glGetUniformLocation(self->vmt->state.shaderDefault, "model"), 	//Specifies the location of the uniform variable to be modified - must be an active uniform variable name in program that is not a structure, an array of structures, or a subcomponent of a vector or a matrix.
+					1,																//number of matrices to be modified
+					GL_FALSE,														//transpose = no
+					&model[0][0]													//pointer to start of the matrix
+				);
+			//Specify the value of a uniform variable for the current program object
+				glUniform4fv(
+					glGetUniformLocation(self->vmt->state.shaderDefault, "color"), 	//get location of color uniform variable in shader stored in shaderDefault
+					1, 																//number of elements to modify
+					color															//color values
+				);
 
-		glBindTexture(GL_TEXTURE_2D, self->vmt->state.texture_color);
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, NULL);
+		//bind current data to quad
+			glBindVertexArray(self->vmt->state.vaoQuad);
+
+		//bind textureColor data into texture 2d
+			glBindTexture(GL_TEXTURE_2D, self->vmt->state.textureColor);
+
+		//actually render the primitive
+			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, NULL);
 
 		glBindVertexArray(0);
 
